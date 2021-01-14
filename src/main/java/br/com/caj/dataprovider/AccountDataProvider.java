@@ -9,7 +9,7 @@ import br.com.caj.domain.entity.Account;
 import br.com.caj.domain.usecase.exception.AccountException;
 import lombok.RequiredArgsConstructor;
 
-@Named("accountProviderImpl")
+@Named("accountDataProvider")
 @RequiredArgsConstructor
 public final class AccountDataProvider implements AccountProvider {
 

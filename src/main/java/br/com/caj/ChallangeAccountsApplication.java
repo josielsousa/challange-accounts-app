@@ -2,10 +2,8 @@ package br.com.caj;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "br.com.caj.domain")
+@SpringBootApplication(scanBasePackages = "br.com.caj")
 public class ChallangeAccountsApplication {
 
 	public static void main(String[] args) {
