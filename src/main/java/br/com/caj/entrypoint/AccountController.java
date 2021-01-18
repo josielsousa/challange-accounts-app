@@ -1,7 +1,6 @@
 package br.com.caj.entrypoint;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,17 +35,18 @@ public final class AccountController implements Serializable {
    * Returns an set of all accounts avaliable.
    */
   @GetMapping("/accounts")
-  public ResponseEntity<Set<AccountModel>> listAccounts() {
-    Set<AccountModel> accounts = Collections.emptySet();
-
+  public ResponseEntity<?> listAccounts() {
     try {
-      accounts = accountUseCase.getAllAccounts().stream().map(AccountModel::fromDomain).collect(Collectors.toSet());
-    } catch (AccountException e) {
-      ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
-    } catch (Exception e) {
-      ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage(e.getMessage()));
-    }
+      final Set<AccountModel> accounts = accountUseCase.getAllAccounts()
+        .stream()
+        .map(AccountModel::fromDomain)
+        .collect(Collectors.toSet());
 
-    return ResponseEntity.ok(accounts);
+      return ResponseEntity.ok(accounts);
+    } catch (AccountException e) {
+      return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage(e.getMessage()));
+    }  
   }
 }

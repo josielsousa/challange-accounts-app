@@ -1,6 +1,7 @@
 package br.com.caj.dataprovider;
 
 import java.util.Set;
+import java.util.Collections;
 
 import javax.inject.Named;
 
@@ -15,8 +16,7 @@ public final class AccountDataProvider implements AccountProvider {
 
   @Override
   public Set<Account> getAllAccounts() throws AccountException {
-    // TODO Auto-generated method stub
-    return null;
+    return Collections.emptySet();
   }
 
   @Override

@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ../challange-accounts-domain
+./mvnw clean install
+cd ../challange-accounts-app
+./mvnw clean install && ./mvnw spring-boot:run
