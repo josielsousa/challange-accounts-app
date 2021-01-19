@@ -25,8 +25,7 @@ public final class AccountDataProvider implements AccountProvider {
   }
 
   public Account create(Account account) throws AccountException, AccountExistingException {
-    // TODO Auto-generated method stub
-    return null;
+    return Account.builder().build();
   }
 
   public Account update(Account account) throws AccountException {
