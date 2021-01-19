@@ -28,9 +28,8 @@ public final class AccountDataProvider implements AccountProvider {
     return Account.builder().build();
   }
 
-  public Account update(Account account) throws AccountException {
-    // TODO Auto-generated method stub
-    return null;
+  public Account update(Account account) throws AccountException, AccountNotFoundException {
+    return account;
   }
 
   public Account getAccountByCPF(String cpf) throws AccountException {
