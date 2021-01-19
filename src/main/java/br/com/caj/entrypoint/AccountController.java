@@ -1,6 +1,7 @@
 package br.com.caj.entrypoint;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,12 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.caj.config.http.ErrorMessage;
 import br.com.caj.domain.entity.Account;
 import br.com.caj.domain.usecase.AccountUseCase;
 import br.com.caj.domain.usecase.exception.AccountException;
+import br.com.caj.domain.usecase.exception.AccountExistingException;
 import br.com.caj.domain.usecase.exception.AccountNotFoundException;
 import br.com.caj.entrypoint.model.AccountModel;
 
@@ -54,13 +59,36 @@ public final class AccountController implements Serializable {
   /**
    * Return an account by uuid.
    */
-  @GetMapping("/accounts/{uuid}")
+  @GetMapping("/account/{uuid}")
   public ResponseEntity<?> getAccount(@PathVariable("uuid") final String uuid) {
     try {
       final Account account = accountUseCase.getAccount(uuid);
       return ResponseEntity.ok(account);
     } catch (AccountNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage(e.getMessage()));
+    }
+  }
+
+  /**
+   * Create a new account from data received.
+   * 
+   * @param accountModel
+   * @return
+   */
+  @PostMapping("/account")
+  public ResponseEntity<?> create(@RequestBody final AccountModel accountModel) {
+    try {
+      Account accountCreated = accountUseCase.create(AccountModel.toDomain(accountModel));
+      URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
+          .buildAndExpand(accountCreated.getUuid()).toUri();
+
+      return ResponseEntity.created(location).build();
+    } catch (AccountException e) {
+      return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    } catch (AccountExistingException e) {
+      return ResponseEntity.unprocessableEntity().body(new ErrorMessage(e.getMessage()));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage(e.getMessage()));
     }

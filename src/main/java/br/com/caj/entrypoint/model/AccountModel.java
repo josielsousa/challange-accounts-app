@@ -3,6 +3,9 @@ package br.com.caj.entrypoint.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.caj.domain.entity.Account;
 import lombok.Builder;
@@ -26,6 +29,20 @@ public final class AccountModel implements Serializable {
   private Instant updatedAt;
 
   /**
+   * Checks that uuid is empty.
+   */
+  private boolean uuidIsEmpty() {
+    return uuid == null || uuid.isBlank();
+  }
+
+  /**
+   * Checks that secret is empty.
+   */
+  private boolean secretIsEmpty() {
+    return secret == null || secret.isBlank();
+  }
+
+  /**
    * Transform account domain into account app model.
    * 
    * @param account
@@ -36,7 +53,6 @@ public final class AccountModel implements Serializable {
       .uuid(account.getUuid())
       .cpf(account.getCpf())
       .name(account.getName())
-      .secret(account.getSecret())
       .balance(account.getBalance())
       .createdAt(account.getCreatedAt())
       .updatedAt(account.getUpdatedAt())
@@ -50,11 +66,18 @@ public final class AccountModel implements Serializable {
    * @return
    */
   public static Account toDomain(final AccountModel accountModel) {
+    final String uuid = accountModel.uuidIsEmpty() ? UUID.randomUUID().toString() : accountModel.getUuid();
+
+    String secretHashed = null;
+    if (accountModel.secretIsEmpty()) {
+      secretHashed = new BCryptPasswordEncoder().encode(accountModel.getSecret());
+    }
+
     return Account.builder()
-      .uuid(accountModel.getUuid())
+      .uuid(uuid)
+      .secret(secretHashed)
       .cpf(accountModel.getCpf())
       .name(accountModel.getName())
-      .secret(accountModel.getSecret())
       .balance(accountModel.getBalance())
       .createdAt(accountModel.getCreatedAt())
       .updatedAt(accountModel.getUpdatedAt())
