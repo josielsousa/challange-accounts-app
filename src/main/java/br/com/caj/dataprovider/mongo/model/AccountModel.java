@@ -1,48 +1,41 @@
-package br.com.caj.entrypoint.model;
+package br.com.caj.dataprovider.mongo.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import br.com.caj.domain.entity.Account;
 import lombok.Builder;
 import lombok.Data;
 
 /**
- * Account model used on transfer account data to account domain.
+ * Mapping data to persist account model info.
  */
-@Builder
 @Data
-public final class AccountModel implements Serializable {
+@Builder
+@Document("accounts")
+public class AccountModel implements Serializable {
 
-  private static final long serialVersionUID = 4921707232595598380L;
+  private static final long serialVersionUID = 1099699127320428177L;
 
+  @Id
   private String uuid;
-  private String name;
+
   private String cpf;
+  private String name;
   private String secret;
   private BigDecimal balance;
+
+  @CreatedDate
   private Instant createdAt;
+
+  @LastModifiedDate
   private Instant updatedAt;
-
-  /**
-   * Checks that uuid is empty.
-   */
-  private boolean uuidIsEmpty() {
-    return uuid == null || uuid.isBlank();
-  }
-
-  /**
-   * Checks that secret is empty.
-   */
-  private boolean secretIsEmpty() {
-    return secret == null || secret.isBlank();
-  }
 
   /**
    * Transform account domain into account app model.
@@ -68,17 +61,10 @@ public final class AccountModel implements Serializable {
    * @return
    */
   public static Account toDomain(final AccountModel accountModel) {
-    final String uuid = accountModel.uuidIsEmpty() ? UUID.randomUUID().toString() : accountModel.getUuid();
-
-    String secretHashed = null;
-    if (accountModel.secretIsEmpty()) {
-      secretHashed = new BCryptPasswordEncoder().encode(accountModel.getSecret());
-    }
-
     return Account.builder()
-      .uuid(uuid)
-      .secret(secretHashed)
       .cpf(accountModel.getCpf())
+      .uuid(accountModel.getUuid())
+      .secret(accountModel.getSecret())
       .name(accountModel.getName())
       .balance(accountModel.getBalance())
       .createdAt(accountModel.getCreatedAt())
