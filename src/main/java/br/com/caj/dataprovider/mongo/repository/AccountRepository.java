@@ -1,5 +1,7 @@
 package br.com.caj.dataprovider.mongo.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +12,7 @@ import br.com.caj.dataprovider.mongo.model.AccountModel;
  */
 @Repository
 public interface AccountRepository extends MongoRepository<AccountModel, String> {
-  
+
+  Optional<AccountModel> findByCpf(final String cpf);
+
 }

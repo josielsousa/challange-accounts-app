@@ -2,7 +2,7 @@ package br.com.caj.dataprovider;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Collections;
+import java.util.Optional;
 
 import javax.inject.Named;
 
@@ -11,7 +11,6 @@ import br.com.caj.dataprovider.mongo.repository.AccountRepository;
 import br.com.caj.domain.dataprovider.AccountProvider;
 import br.com.caj.domain.entity.Account;
 import br.com.caj.domain.usecase.exception.AccountException;
-import br.com.caj.domain.usecase.exception.AccountExistingException;
 import br.com.caj.domain.usecase.exception.AccountNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -31,19 +30,53 @@ public final class AccountDataProvider implements AccountProvider {
           .collect(Collectors.toSet());
   }
 
+  /**
+   * Recovery account by uuid.
+   */
   public Account getAccount(String uuid) throws AccountNotFoundException {
-    return Account.builder().build();
-  }
+    final Optional<AccountModel> optionalAccountModel = accountRepository.findById(uuid);
 
-  public Account create(Account account) throws AccountException, AccountExistingException {
-    return Account.builder().build();
-  }
+    if (!optionalAccountModel.isPresent()) {
+      throw new AccountNotFoundException("Account not found by uuid: " + uuid);
+    }
 
-  public Account update(Account account) throws AccountException, AccountNotFoundException {
+    Account account =  AccountModel.toDomain(optionalAccountModel.get());
     return account;
   }
 
-  public Account getAccountByCPF(String cpf) throws AccountException {
+  /**
+   * Create a new account.
+   */
+  public Account create(Account account) throws AccountException {
+    final AccountModel accountSaved = accountRepository.save(AccountModel.fromDomain(account));
+    return AccountModel.toDomain(accountSaved);
+  }
+
+  /**
+   * Update an account existing.
+   */
+  public Account update(Account account) throws AccountException, AccountNotFoundException {
+    Account exisitng = getAccount(account.getUuid());
+
+    if (exisitng != null) {
+      final AccountModel accountSaved = accountRepository.save(AccountModel.fromDomain(account));
+      return AccountModel.toDomain(accountSaved);
+    }
+   
     return null;
+  }
+
+  /**
+   * Recovery account by cpf.
+   */
+  public Account getAccountByCPF(final String cpf) throws AccountException {
+    final Optional<AccountModel> optionalAccountModel = accountRepository.findByCpf(cpf);
+    Account account = null;
+
+    if (optionalAccountModel.isPresent()) {
+      account = AccountModel.toDomain(optionalAccountModel.get());
+    }
+
+    return account;
   }
 }
