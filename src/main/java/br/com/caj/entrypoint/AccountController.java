@@ -106,10 +106,7 @@ public final class AccountController implements Serializable {
       @PathVariable("uuid") final String uuid) {
     try {
       Account accountUpdated = accountUseCase.update(AccountModel.toDomain(accountModel));
-      URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
-          .buildAndExpand(accountUpdated.getUuid()).toUri();
-
-      return ResponseEntity.created(location).build();
+      return ResponseEntity.ok(AccountModel.fromDomain(accountUpdated));
     } catch (AccountException e) {
       return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
     } catch (AccountNotFoundException e) {
