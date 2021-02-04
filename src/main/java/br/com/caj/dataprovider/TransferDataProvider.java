@@ -1,37 +1,37 @@
 package br.com.caj.dataprovider;
 
 import java.util.Set;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
+import br.com.caj.dataprovider.mongo.model.TransferModel;
+import br.com.caj.dataprovider.mongo.repository.TransferRepository;
 import br.com.caj.domain.dataprovider.TransferProvider;
 import br.com.caj.domain.entity.Transfer;
-import br.com.caj.domain.usecase.exception.account.AccountException;
 import lombok.RequiredArgsConstructor;
 
 @Named("transferDataProvider")
 @RequiredArgsConstructor
 public final class TransferDataProvider implements TransferProvider {
 
-  // private final TransferRepository transferRepository;
+  private final TransferRepository transferRepository;
 
   /**
-   * Recovery all accounts existing into repository data.
+   * Recovery all transfers existing for account id into repository data.
    */
-  public Set<Transfer> getAllTransfers(String accountUuid) {
-    // return transferRepository.findAll()
-    // .stream()
-    // .map(AccountModel::toDomain)
-    // .collect(Collectors.toSet());
-    return new HashSet<Transfer>();
+  public Set<Transfer> getAllTransfers(final String accountOriginUuid) {
+    return transferRepository.findAllByAccountOriginUuid(accountOriginUuid)
+    .stream()
+    .map(TransferModel::toDomain)
+    .collect(Collectors.toSet());
   }
 
   /**
    * Create a new transfer.
    */
-  public Transfer create(Transfer transfer) throws AccountException {
-    // save on transfer repository
-    return Transfer.builder().build();
+  public Transfer create(Transfer transfer) {
+    final TransferModel transferSaved = transferRepository.save(TransferModel.fromDomain(transfer));
+    return TransferModel.toDomain(transferSaved);
   }
 }
