@@ -1,43 +1,43 @@
-package br.com.caj.dataprovider.mongo.model;
+package br.com.caj.entrypoint.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.caj.domain.entity.Transfer;
 import lombok.Builder;
 import lombok.Data;
 
 /**
- * Mapping data to persist transfer model info.
+ * Account model used on transfer account data to account domain.
  */
-@Data
 @Builder
-@Document("transfers")
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-public class TransferModel implements Serializable {
+@Data
+public final class TransferModel implements Serializable {
 
-  private static final long serialVersionUID = 73798522278695720L;
+  private static final long serialVersionUID = 6115832672292125749L;
 
-  @Id
   private String uuid;
-
   private BigDecimal amount;
+
+  @JsonProperty("account_origin_id")
   private String accountOriginUuid;
+
+  @JsonProperty("account_destination_id")
   private String accountDestinationUuid;
 
-  @CreatedDate
   private Instant createdAt;
-
-  @LastModifiedDate
   private Instant updatedAt;
+
+  /**
+   * Checks that uuid is empty.
+   */
+  private boolean uuidIsEmpty() {
+    return uuid == null || uuid.isBlank();
+  }
 
   /**
    * Transform transfer domain into transfer app model.
@@ -63,8 +63,10 @@ public class TransferModel implements Serializable {
    * @return
    */
   public static Transfer toDomain(final TransferModel transferModel) {
+    final String uuid = transferModel.uuidIsEmpty() ? UUID.randomUUID().toString() : transferModel.getUuid();
+
     return Transfer.builder()
-      .uuid(transferModel.getUuid())
+      .uuid(uuid)
       .amount(transferModel.getAmount())
       .accountOriginUuid(transferModel.getAccountOriginUuid())
       .accountDestinationUuid(transferModel.getAccountDestinationUuid())

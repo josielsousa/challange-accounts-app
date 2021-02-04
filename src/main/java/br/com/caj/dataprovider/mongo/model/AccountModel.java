@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +21,7 @@ import lombok.Data;
 @Data
 @Builder
 @Document("accounts")
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public class AccountModel implements Serializable {
 
   private static final long serialVersionUID = 1099699127320428177L;
