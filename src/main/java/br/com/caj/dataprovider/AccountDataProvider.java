@@ -47,7 +47,7 @@ public final class AccountDataProvider implements AccountProvider {
    * Create a new account.
    */
   public Account create(Account account) throws AccountException {
-    final AccountModel accountSaved = accountRepository.save(AccountModel.fromDomain(account));
+    final AccountModel accountSaved = accountRepository.save(AccountModel.toPersist(account));
     return AccountModel.toDomain(accountSaved);
   }
 

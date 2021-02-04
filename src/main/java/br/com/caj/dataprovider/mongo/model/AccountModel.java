@@ -58,6 +58,24 @@ public class AccountModel implements Serializable {
   }
 
   /**
+   * Transform account domain into account app model.
+   * 
+   * @param account
+   * @return
+   */
+  public static AccountModel toPersist(final Account account) {
+    return AccountModel.builder()
+      .uuid(account.getUuid())
+      .cpf(account.getCpf())
+      .name(account.getName())
+      .secret(account.getSecret())
+      .balance(account.getBalance())
+      .createdAt(account.getCreatedAt())
+      .updatedAt(account.getUpdatedAt())
+      .build();
+  }
+
+  /**
    * Transform account app into account domain.
    * 
    * @param account

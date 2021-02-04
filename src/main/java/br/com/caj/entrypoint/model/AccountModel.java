@@ -69,7 +69,7 @@ public final class AccountModel implements Serializable {
     final String uuid = accountModel.uuidIsEmpty() ? UUID.randomUUID().toString() : accountModel.getUuid();
 
     String secretHashed = null;
-    if (accountModel.secretIsEmpty()) {
+    if (!accountModel.secretIsEmpty()) {
       secretHashed = new BCryptPasswordEncoder().encode(accountModel.getSecret());
     }
 
