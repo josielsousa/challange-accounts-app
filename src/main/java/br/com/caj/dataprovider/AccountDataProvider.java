@@ -10,8 +10,8 @@ import br.com.caj.dataprovider.mongo.model.AccountModel;
 import br.com.caj.dataprovider.mongo.repository.AccountRepository;
 import br.com.caj.domain.dataprovider.AccountProvider;
 import br.com.caj.domain.entity.Account;
-import br.com.caj.domain.usecase.exception.AccountException;
-import br.com.caj.domain.usecase.exception.AccountNotFoundException;
+import br.com.caj.domain.usecase.exception.account.AccountException;
+import br.com.caj.domain.usecase.exception.account.AccountNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Named("accountDataProvider")
@@ -23,7 +23,7 @@ public final class AccountDataProvider implements AccountProvider {
   /**
    * Recovery all accounts existing into repository data.
    */
-  public Set<Account> getAllAccounts() throws AccountException {
+  public Set<Account> getAllAccounts() {
     return accountRepository.findAll()
           .stream()
           .map(AccountModel::toDomain)
@@ -35,9 +35,8 @@ public final class AccountDataProvider implements AccountProvider {
    */
   public Account getAccount(String uuid) throws AccountNotFoundException {
     final Optional<AccountModel> optionalAccountModel = accountRepository.findById(uuid);
-
     if (!optionalAccountModel.isPresent()) {
-      throw new AccountNotFoundException("Account not found by uuid: " + uuid);
+      return null;
     }
 
     Account account =  AccountModel.toDomain(optionalAccountModel.get());
@@ -69,7 +68,7 @@ public final class AccountDataProvider implements AccountProvider {
   /**
    * Recovery account by cpf.
    */
-  public Account getAccountByCPF(final String cpf) throws AccountException {
+  public Account getAccountByCPF(final String cpf) {
     final Optional<AccountModel> optionalAccountModel = accountRepository.findByCpf(cpf);
     Account account = null;
 

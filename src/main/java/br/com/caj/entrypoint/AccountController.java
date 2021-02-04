@@ -18,9 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.caj.config.http.ErrorMessage;
 import br.com.caj.domain.entity.Account;
 import br.com.caj.domain.usecase.AccountUseCase;
-import br.com.caj.domain.usecase.exception.AccountException;
-import br.com.caj.domain.usecase.exception.AccountExistingException;
-import br.com.caj.domain.usecase.exception.AccountNotFoundException;
+import br.com.caj.domain.usecase.exception.account.AccountException;
+import br.com.caj.domain.usecase.exception.account.AccountExistingException;
+import br.com.caj.domain.usecase.exception.account.AccountNotFoundException;
 import br.com.caj.entrypoint.model.AccountModel;
 
 /**
