@@ -337,6 +337,12 @@ cd challange-accounts-app
 * [4devs - Gerador de Pessoas](https://www.4devs.com.br/gerador_de_pessoas) - Mock utilizado para gerar dados válidos durante testes e documentação da API.
 
 ---
+### TODO
+[] Adicionar Transação para controlar o fluxo de transferências;
+[] Adicionar JWT auth;
+[] Adicionar validação de dados de entrada;
+
+---
 ### Autor
 
 *  **Josiel Sousa** - [josielsousa](https://github.com/josielsousa)
