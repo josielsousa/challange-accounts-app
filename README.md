@@ -158,7 +158,7 @@ cd challange-accounts-app
 	```
 ---
 
-*  `/accounts/{id}/balance` - `GET` - Rota utilizada para recuperar o saldo de uma  `account`
+*  `/account/{id}/balance` - `GET` - Rota utilizada para recuperar o saldo de uma  `account`
 
 
 	Exemplo de requisição : 
