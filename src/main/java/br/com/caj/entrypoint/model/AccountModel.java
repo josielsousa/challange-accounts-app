@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.caj.domain.entity.Account;
