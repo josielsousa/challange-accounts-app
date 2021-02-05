@@ -2,14 +2,16 @@ package br.com.caj.entrypoint;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +39,10 @@ public final class AccountController implements Serializable {
 
   private AccountUseCase accountUseCase;
 
-  /**
+  /** 
    * Default constructor.
+   * 
+   * @param accountUseCase
    */
   public AccountController(final AccountUseCase accountUseCase) {
     this.accountUseCase = accountUseCase;
@@ -63,9 +67,14 @@ public final class AccountController implements Serializable {
 
   /**
    * Return an account by uuid.
-   */
+   * 
+   * @param uuid
+   * @return
+  */
   @GetMapping("/account/{uuid}")
-  public ResponseEntity<?> getAccount(@PathVariable("uuid") final String uuid) {
+  public ResponseEntity<?> getAccount(
+    @PathVariable(name = "uuid") @NotNull(message = "UUID not be empty") final String uuid
+  ) {
     try {
       final Account account = accountUseCase.getAccount(uuid);
       return ResponseEntity.ok(AccountModel.fromDomain(account));
@@ -76,11 +85,16 @@ public final class AccountController implements Serializable {
     }
   }
 
-  /**
+  /** 
    * Return an account by uuid.
+   * 
+   * @param uuid
+   * @return
    */
   @GetMapping("/account/{uuid}/balance")
-  public ResponseEntity<?> getAccountBalance(@PathVariable("uuid") final String uuid) {
+  public ResponseEntity<?> getAccountBalance(
+    @PathVariable("uuid") @NotBlank(message = "UUID not be empty") final String uuid
+  ) {
     try {
       final Account account = accountUseCase.getAccount(uuid);
       return ResponseEntity.ok(AccountBalanceModel.fromDomain(account));
