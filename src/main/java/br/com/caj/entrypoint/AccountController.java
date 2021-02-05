@@ -2,8 +2,11 @@ package br.com.caj.entrypoint;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +98,7 @@ public final class AccountController implements Serializable {
    * @return
    */
   @PostMapping("/account")
-  public ResponseEntity<?> create(@RequestBody final AccountModel accountModel) {
+  public ResponseEntity<?> create(@Valid @RequestBody final AccountModel accountModel) {
     try {
       Account accountCreated = accountUseCase.create(AccountModel.toDomain(accountModel));
       URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
@@ -118,7 +121,7 @@ public final class AccountController implements Serializable {
    * @return
    */
   @PutMapping("/account/{uuid}")
-  public ResponseEntity<?> updated(@RequestBody final AccountModel accountModel,
+  public ResponseEntity<?> updated(@Valid @RequestBody final AccountModel accountModel,
       @PathVariable("uuid") final String uuid) {
     try {
       Account accountUpdated = accountUseCase.update(AccountModel.toDomain(accountModel));

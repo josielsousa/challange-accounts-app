@@ -5,6 +5,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.caj.domain.entity.Account;
@@ -18,13 +22,22 @@ import lombok.Data;
 @Data
 public final class AccountModel implements Serializable {
 
-  private static final long serialVersionUID = 4921707232595598380L;
+  private static final long serialVersionUID = -6350487785860680151L;
 
   private String uuid;
+
+  @NotBlank(message = "Name not be empty")
   private String name;
+
+  @NotBlank(message = "CPF not be empty")
   private String cpf;
+
+  @NotBlank(message = "Secret not be empty")
   private String secret;
+
+  @DecimalMin(value = "0.01", message = "Balance not be empty")
   private BigDecimal balance;
+
   private Instant createdAt;
   private Instant updatedAt;
 
