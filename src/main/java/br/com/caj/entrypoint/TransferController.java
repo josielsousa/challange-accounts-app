@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +70,7 @@ public final class TransferController implements Serializable {
    * @return
    */
   @PostMapping("/transfer")
-  public ResponseEntity<?> create(@RequestBody final TransferModel transferModel) {
+  public ResponseEntity<?> create(@Valid @RequestBody final TransferModel transferModel) {
     try {
       Transfer accountCreated = transferUseCase.create(TransferModel.toDomain(transferModel));
       URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")

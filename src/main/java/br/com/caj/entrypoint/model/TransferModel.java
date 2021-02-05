@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.caj.domain.entity.Transfer;
@@ -21,12 +24,16 @@ public final class TransferModel implements Serializable {
   private static final long serialVersionUID = 6115832672292125749L;
 
   private String uuid;
+
+  @DecimalMin(value = "0.01", message = "Balance not be empty")
   private BigDecimal amount;
 
   @JsonProperty("account_origin_id")
+  @NotBlank(message = "Account Origin not be empty")
   private String accountOriginUuid;
 
   @JsonProperty("account_destination_id")
+  @NotBlank(message = "Account destination not be empty")
   private String accountDestinationUuid;
 
   private Instant createdAt;

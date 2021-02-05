@@ -78,6 +78,8 @@ public final class AccountController implements Serializable {
     try {
       final Account account = accountUseCase.getAccount(uuid);
       return ResponseEntity.ok(AccountModel.fromDomain(account));
+    } catch (AccountException e) {
+      return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
     } catch (AccountNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(e.getMessage()));
     } catch (Exception e) {
@@ -98,6 +100,8 @@ public final class AccountController implements Serializable {
     try {
       final Account account = accountUseCase.getAccount(uuid);
       return ResponseEntity.ok(AccountBalanceModel.fromDomain(account));
+    } catch (AccountException e) {
+      return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
     } catch (AccountNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(e.getMessage()));
     } catch (Exception e) {
